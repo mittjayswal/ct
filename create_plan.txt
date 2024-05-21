@@ -1,0 +1,132 @@
+Absolutely, having the code in text format helps in refining and expanding it. Below is an updated version of your Java class `ALMTestUpdater` to include methods for creating a test instance in the Test Lab and executing a test run, using the workflow you've specified:
+
+```java
+import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.util.EntityUtils;
+import java.util.Base64;
+
+public class ALMTestUpdater {
+
+    private static final String ALM_URL = "https://qc.nam.nsroot.net:450/qcbin";
+    private static final String DOMAIN = "GCT_GLOBAL";
+    private static final String PROJECT = "Planview_Testing";
+    private static final String USERNAME = "MJ53132";
+    private static final String PASSWORD = "Indore737$";
+
+    public static void main(String[] args) {
+        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+            // Authenticate
+            String auth = authenticate(httpClient);
+            if (auth == null) {
+                System.out.println("Authentication failed.");
+                return;
+            }
+
+            // Create Test Instance
+            String testInstanceId = createTestInstance(httpClient, auth, "testId", "testSetId"); // Replace testId and testSetId with actual IDs
+            if (testInstanceId == null) {
+                System.out.println("Failed to create test instance.");
+                return;
+            }
+
+            // Execute Test Run
+            executeTestRun(httpClient, auth, testInstanceId, "Passed");
+
+            // Logout
+            logout(httpClient);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private static String authenticate(CloseableHttpClient httpClient) throws Exception {
+        String authUrl = ALM_URL + "/authentication-point/authenticate";
+        HttpGet authRequest = new HttpGet(authUrl);
+        String auth = USERNAME + ":" + PASSWORD;
+        String encodedAuth = Base64.getEncoder().encodeToString(auth.getBytes());
+        authRequest.setHeader("Authorization", "Basic " + encodedAuth);
+
+        HttpResponse authResponse = httpClient.execute(authRequest);
+        int statusCode = authResponse.getStatusLine().getStatusCode();
+        EntityUtils.consume(authResponse.getEntity());
+        if (statusCode == 200) {
+            System.out.println("Authentication successful.");
+            return encodedAuth;
+        } else {
+            System.out.println("Authentication failed with status code: " + statusCode);
+            return null;
+        }
+    }
+
+    private static String createTestInstance(CloseableHttpClient httpClient, String auth, String testId, String testSetId) throws Exception {
+        String createUrl = ALM_URL + "/rest/domains/" + DOMAIN + "/projects/" + PROJECT + "/test-instances";
+        HttpPost createRequest = new HttpPost(createUrl);
+        createRequest.setHeader("Authorization", "Basic " + auth);
+        createRequest.setHeader("Content-Type", "application/xml");
+
+        String xmlPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            + "<Entity Type=\"test-instance\">"
+            + "<Fields>"
+            + "<Field Name=\"test-id\"><Value>" + testId + "</Value></Field>"
+            + "<Field Name=\"cycle-id\"><Value>" + testSetId + "</Value></Field>"
+            + "</Fields>"
+            + "</Entity>";
+
+        createRequest.setEntity(new StringEntity(xmlPayload));
+        HttpResponse createResponse = httpClient.execute(createRequest);
+        if (createResponse.getStatusLine().getStatusCode() == 201) {
+            // Assuming you parse the response to extract instance ID
+            System.out.println("Test instance created successfully.");
+            return "extractedInstanceID"; // Replace with actual instance ID extraction logic
+        } else {
+            System.out.println("Failed to create test instance with status code: " + createResponse.getStatusLine().getStatusCode());
+            return null;
+        }
+    }
+
+    private static void executeTestRun(CloseableHttpClient httpClient, String auth, String testInstanceId, String status) throws Exception {
+        String executeUrl = ALM_URL + "/rest/domains/" + DOMAIN + "/projects/" + PROJECT + "/runs";
+        HttpPost executeRequest = new HttpPost(executeUrl);
+        executeRequest.setHeader("Authorization", "Basic " + auth);
+        executeRequest.setHeader("Content-Type", "application/xml");
+
+        String xmlPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+            + "<Entity Type=\"run\">"
+            + "<Fields>"
+            + "<Field Name=\"test-instance-id\"><Value>" + testInstanceId + "</Value></Field>"
+            + "<Field Name=\"status\"><Value>" + status + "</Value></Field>"
+            + "</Fields>"
+            + "</Entity>";
+
+        executeRequest.setEntity(new StringEntity(xmlPayload));
+        HttpResponse executeResponse = httpClient.execute(executeRequest);
+        if (executeResponse.getStatus
+
+Line().getStatusCode() == 201) {
+            System.out.println("Test run executed successfully.");
+        } else {
+            System.out.println("Failed to execute test run with status code: " + executeResponse.getStatusLine().getStatusCode());
+        }
+    }
+
+    private static void logout(CloseableHttpClient httpClient) throws Exception {
+        String logoutUrl = ALM_URL + "/authentication-point/logout";
+        HttpGet logoutRequest = new HttpGet(logoutUrl);
+        HttpResponse logoutResponse = httpClient.execute(logoutRequest);
+        int statusCode = logoutResponse.getStatusLine().getStatusCode();
+        EntityUtils.consume(logoutResponse.getEntity());
+        if (statusCode == 200) {
+            System.out.println("Logout successful.");
+        } else {
+            System.out.println("Logout failed with status code: " + statusCode);
+        }
+    }
+}
+```
+
+This code includes the methods to create a test instance and execute a test run, as described earlier. Remember to replace `"testId"` and `"testSetId"` with actual IDs from your ALM setup and adjust the authentication and other parameters as necessary.
