@@ -1,0 +1,56 @@
+# Project Progress and Pending Tasks for Tableau Automation
+
+## Completed Tasks
+
+1. **Knowledge Transfer and Exploration:**
+   - Conducted Knowledge Transfer (KT) sessions with the team to understand Tableau.
+   - Explored Tableau dashboards and their functionalities.
+   - Reviewed the documentation prepared by Ankit's team for deeper insights.
+
+2. **UI Test Case Development:**
+   - Developed UI test cases in ALM for various Tableau tabs, including:
+     - Sprint Execution Dashboard
+     - Agile Delivery Metrics
+     - Download
+     - Backlog Health
+     - Lead/Cycle Time
+
+3. **Framework Preparation:**
+   - Prepared a new framework for Tableau automation script writing.
+   - Conducted manual exploration to understand the end-to-end flow and identified automation opportunities based on sprint data.
+
+4. **End-to-End Flow Documentation:**
+   - Created a comprehensive document outlining the end-to-end flow from Tableau to Jira, and from Jira to Tableau, including DB count comparison using queries.
+   - Uploaded the document to Confluence. [Confluence Link](#)
+
+5. **Basic Automation Implementation:**
+   - **UI Automation:**
+     - Automated UI test cases written in ALM, verifying proper data display.
+   - **Data Verification:**
+     - Developed scripts to compare data displayed in Tableau’s sprint execution dashboard with the database counts, identifying any mismatches.
+   - **Cucumber Reporting:**
+     - Implemented Cucumber reports for a more user-friendly and detailed view of test execution, aiding in step-wise and case-wise analysis.
+   - **Data Comparison Automation:**
+     - Automated the comparison of 'Planned vs Delivered' metrics, including Planned, Added, Removed, Spilled, Delivered, and Success Rate. Applied filters by domain and team lead to ensure data accuracy.
+   - **Jenkins Integration:**
+     - Created Jenkins jobs for the execution of Tableau automation scripts, facilitating regular execution and email reporting of the results.
+
+6. **Documentation and Repository Management:**
+   - Uploaded all automation scripts and related documents to Bitbucket. [Bitbucket Link](#)
+
+## Pending Tasks
+
+1. **Dynamic Structure Development:**
+   - Enhance the automation framework to allow dynamic execution for any sprint with minimal changes.
+
+2. **Branch Merging and Jenkins Configuration:**
+   - Merge all new changes into a single branch.
+   - Ensure Jenkins configuration is compatible with the updated automation scripts.
+
+3. **End-to-End Dynamic Automation:**
+   - Develop dynamic end-to-end automation that executes cases and updates results in Zephyr, involving extensive research and development.
+
+## Conclusion
+
+The project has made significant progress in automating Tableau processes and verifying data accuracy. The focus will now shift to making the automation framework more dynamic and integrating it seamlessly with Jenkins and Zephyr for enhanced reporting and execution flexibility.
+
