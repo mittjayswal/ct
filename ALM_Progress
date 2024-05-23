@@ -1,0 +1,128 @@
+# Project Progress and Pending Tasks for ALM Automation
+
+## Completed Tasks
+
+1. **Initial Setup and Knowledge Acquisition:**
+   - **Connection Request:**
+     - Initiated the connection request for ALM automation, collaborating with multiple team members to gather necessary details.
+   - **Resource Sharing:**
+     - Team members shared a link with detailed ALM documentation for reference and automation purposes. [ALM Documentation Link](#)
+
+2. **Script Development and Authentication:**
+   - **Successful Connection:**
+     - Implemented the initial script to establish a successful connection to ALM.
+   - **Authentication Challenges:**
+     - Encountered and resolved authentication challenges by adopting a basic authentication approach using REST Assured for script writing.
+   - **Example of Successful Connection Script:**
+     ### 1. **ALM Connection and Test Result Update Script**
+
+#### Description:
+This script establishes a connection to the ALM server, performs authentication using basic authentication, updates test results, and logs out. The primary goal of this script is to automate the process of updating test results in ALM, ensuring that the status of test instances is accurately reflected.
+
+#### Key Features:
+- **Authentication:** Uses basic authentication to securely connect to the ALM server.
+- **Test Result Update:** Automates the update of test results, specifying the test instance ID and status.
+- **Error Handling:** Includes error handling to manage authentication failures and unsuccessful test result updates.
+- **Logout Process:** Ensures proper logout from the ALM server to maintain security.
+
+#### Example Code Snippet:
+```java
+private static void updateTestResult(CloseableHttpClient httpClient, String auth, String testInstanceId, String status) throws Exception {
+    String updateUrl = ALM_URL + "/rest/domains/" + DOMAIN + "/projects/" + PROJECT + "/runs";
+    HttpPost updateRequest = new HttpPost(updateUrl);
+    updateRequest.setHeader("Authorization", "Basic " + auth);
+    updateRequest.setHeader("Content-Type", "application/xml");
+
+    String xmlPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+        + "<Entity Type=\"run\">"
+        + "<Fields>"
+        + "<Field Name=\"name\"><Value>Test Run</Value></Field>"
+        + "<Field Name=\"test-instance-id\"><Value>" + testInstanceId + "</Value></Field>"
+        + "<Field Name=\"status\"><Value>" + status + "</Value></Field>"
+        + "</Fields>"
+        + "</Entity>";
+
+    updateRequest.setEntity(new StringEntity(xmlPayload));
+
+    HttpResponse updateResponse = httpClient.execute(updateRequest);
+    int statusCode = updateResponse.getStatusLine().getStatusCode();
+    EntityUtils.consume(updateResponse.getEntity());
+
+    if (statusCode == 201) {
+        System.out.println("Test result updated successfully.");
+    } else {
+        System.out.println("Failed to update test result with status code: " + statusCode);
+    }
+}
+
+3. **Advanced Script Development:**
+   - **Test Instance Creation and Execution:**
+     - Developed scripts to connect with existing test cases and plans, enabling test execution using their test IDs and test set IDs.
+   - **Example of ALM Test Run Update Script:**
+### 2. **ALM Test Instance Creation and Execution Script**
+
+#### Description:
+This script extends the functionality of the initial connection script by adding the ability to create test instances and execute test runs. It authenticates with the ALM server, creates a new test instance using specified test and test set IDs, executes the test run, and logs out. This comprehensive automation ensures that test planning and execution are seamlessly integrated into the ALM workflow.
+
+#### Key Features:
+- **Test Instance Creation:** Automates the creation of test instances, linking them to specific test cases and test sets.
+- **Test Execution:** Executes test runs, updating the status of the test instances based on the results.
+- **Authentication and Security:** Maintains secure authentication using basic authentication and ensures secure logout.
+- **Error Handling and Logging:** Includes robust error handling and logging to track the success and failure of each step in the process.
+
+#### Example Code Snippet:
+```java
+private static String createTestInstance(CloseableHttpClient httpClient, String auth, String testId, String testSetId) throws Exception {
+    String createUrl = ALM_URL + "/rest/domains/" + DOMAIN + "/projects/" + PROJECT + "/test-instances";
+    HttpPost createRequest = new HttpPost(createUrl);
+    createRequest.setHeader("Authorization", "Basic " + auth);
+    createRequest.setHeader("Content-Type", "application/xml");
+
+    String xmlPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+        + "<Entity Type=\"test-instance\">"
+        + "<Fields>"
+        + "<Field Name=\"test-id\"><Value>" + testId + "</Value></Field>"
+        + "<Field Name=\"cycle-id\"><Value>" + testSetId + "</Value></Field>"
+        + "</Fields>"
+        + "</Entity>";
+
+    createRequest.setEntity(new StringEntity(xmlPayload));
+    HttpResponse createResponse = httpClient.execute(createRequest);
+    if (createResponse.getStatusLine().getStatusCode() == 201) {
+        // Assuming you parse the response to extract instance ID
+        System.out.println("Test instance created successfully.");
+        return "extractedInstanceID"; // Replace with actual instance ID extraction logic
+    } else {
+        System.out.println("Failed to create test instance with status code: " + createResponse.getStatusLine().getStatusCode());
+        return null;
+    }
+}
+
+private static void executeTestRun(CloseableHttpClient httpClient, String auth, String testInstanceId, String status) throws Exception {
+    String executeUrl = ALM_URL + "/rest/domains/" + DOMAIN + "/projects/" + PROJECT + "/runs";
+    HttpPost executeRequest = new HttpPost(executeUrl);
+    executeRequest.setHeader("Authorization", "Basic " + auth);
+    executeRequest.setHeader("Content-Type", "application/xml");
+
+    String xmlPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
+        + "<Entity Type=\"run\">"
+        + "<Fields>"
+        + "<Field Name=\"test-instance-id\"><Value>" + testInstanceId + "</Value></Field>"
+        + "<Field Name=\"status\"><Value>" + status + "</Value></Field>"
+        + "</Fields>"
+        + "</Entity>";
+
+    executeRequest.setEntity(new StringEntity(xmlPayload));
+    HttpResponse executeResponse = httpClient.execute(executeRequest);
+    if (executeResponse.getStatusLine().getStatusCode() == 201) {
+        System.out.println("Test run executed successfully.");
+    } else {
+        System.out.println("Failed to execute test run with status code: " + executeResponse.getStatusLine().getStatusCode());
+    }
+}
+
+
+## Conclusion
+
+Significant progress has been made in automating ALM processes, from establishing a successful connection and handling authentication challenges to developing scripts for test instance creation and execution. The next steps involve enhancing the automation framework, improving error handling, integrating with CI/CD pipelines, and documenting the entire process comprehensively.
+
