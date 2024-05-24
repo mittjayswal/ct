@@ -1,0 +1,14 @@
+      String regex = "sprint\\s*=\\s*'([^']*)'";
+        
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(inputString);
+        
+        if (matcher.find()) {
+            String originalSprintValue = matcher.group(1);
+            String updatedString = inputString.replace(originalSprintValue, newSprintValue);
+            return updatedString;
+        } else {
+            // If no match is found, return the original string
+            return inputString;
+        }
+    }
