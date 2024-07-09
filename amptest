@@ -1,0 +1,79 @@
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
+import java.nio.file.FileSystems;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
+public class FileDownloadUploadSteps {
+    WebDriver driver;
+    String downloadPath;
+    String fileName = "downloadedFile.txt"; // Replace with your file name
+
+    @Given("^User is on the download portal$")
+    public void userIsOnDownloadPortal() {
+        driver = new ChromeDriver();
+        // Replace with your download portal URL
+        driver.get("http://example.com/download");
+    }
+
+    @When("^User downloads the file$")
+    public void userDownloadsTheFile() {
+        WebElement downloadButton = driver.findElement(By.id("downloadButton")); // Replace with the actual locator
+        downloadButton.click();
+        // Wait for the file to download, you can use WebDriverWait to ensure the file is downloaded
+    }
+
+    @Then("^File should be downloaded$")
+    public void fileShouldBeDownloaded() {
+        // Ensure the file is downloaded to the expected location
+        downloadPath = System.getProperty("user.home") + "/Downloads/" + fileName;
+        Path path = Paths.get(downloadPath);
+        if (!path.toFile().exists()) {
+            throw new RuntimeException("File not downloaded");
+        }
+    }
+
+    @Given("^User is on the upload portal$")
+    public void userIsOnUploadPortal() {
+        // Replace with your upload portal URL
+        driver.get("http://example.com/upload");
+    }
+
+    @When("^User uploads the downloaded file$")
+    public void userUploadsTheDownloadedFile() {
+        WebElement uploadInput = driver.findElement(By.id("uploadInput")); // Replace with the actual locator
+        uploadInput.sendKeys(downloadPath);
+    }
+
+    @Then("^File should be uploaded successfully$")
+    public void fileShouldBeUploadedSuccessfully() {
+        // Verify the file upload success, you can check for a success message or any other indicator
+        WebElement successMessage = driver.findElement(By.id("successMessage")); // Replace with the actual locator
+        assert successMessage.isDisplayed();
+    }
+
+    @And("^Close the browser$")
+    public void closeTheBrowser() {
+        driver.quit();
+    }
+}
+
+
+
+Feature: File Download and Upload
+
+  Scenario: Download and upload a file
+    Given User is on the download portal
+    When User downloads the file
+    Then File should be downloaded
+    Given User is on the upload portal
+    When User uploads the downloaded file
+    Then File should be uploaded successfully
+    And Close the browser
