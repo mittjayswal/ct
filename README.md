@@ -1,102 +1,50 @@
-# ct
+Goal:
+I want to be deeply immersed in automation testing and contribute significantly to my current team’s automation projects.
 
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.client.methods.HttpPost;
-import org.apache.http.entity.StringEntity;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+Plan:
 
-public class ALMTestUpdater {
+Skills Development: Enhance my skills in automation frameworks, tools, and languages relevant to my role. This could include advanced knowledge of tools like Selenium, JUnit, or others specific to my industry.
 
-    private static final String ALM_URL = "https://your-alm-server/qcbin";
-    private static final String DOMAIN = "your_domain";
-    private static final String PROJECT = "your_project";
-    private static final String USERNAME = "your_username";
-    private static final String PASSWORD = "your_password";
+Mentorship: Seek mentorship from senior colleagues to accelerate my learning and understand industry best practices.
 
-    public static void main(String[] args) {
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
+Two Years from Now:
+Goal:
+I aim to be a recognized expert in automation within my team, taking on more complex projects and potentially leading automation initiatives.
 
-            // Authenticate
-            String auth = authenticate(httpClient);
-            if (auth == null) {
-                System.out.println("Authentication failed.");
-                return;
-            }
+Five Years from Now:
+Goal:
+I envision myself as a Senior QA Engineer with a strong reputation for automation, contributing strategically to the company’s testing strategies and possibly expanding my role into a leadership position.
+-----------
 
-            // Update Test Result
-            updateTestResult(httpClient, auth, "test_instance_id", "Passed");
+Innovative Solutions: Applying problem-solving skills to develop innovative solutions for complex automation challenges.
+Continuous Improvement: Identify areas for improvement in existing processes and propose actionable solutions to enhance efficiency.
 
-            // Logout
-            logout(httpClient);
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+Accuracy in Testing: Use my attention to detail to ensure that test cases are thorough and accurate, catching issues that might be missed otherwise.
+High-Quality Scripts: Ensure that automation scripts are precise, reliable, and maintainable.
 
-    private static String authenticate(CloseableHttpClient httpClient) throws Exception {
-        String authUrl = ALM_URL + "/authentication-point/authenticate";
-        HttpGet authRequest = new HttpGet(authUrl);
-        String auth = USERNAME + ":" + PASSWORD;
-        String encodedAuth = new String(java.util.Base64.getEncoder().encode(auth.getBytes()));
-        authRequest.setHeader("Authorization", "Basic " + encodedAuth);
+-----------
 
-        HttpResponse authResponse = httpClient.execute(authRequest);
-        int statusCode = authResponse.getStatusLine().getStatusCode();
-        EntityUtils.consume(authResponse.getEntity());
+Deep Understanding of Automation Frameworks: Gain expertise in advanced features of popular automation frameworks (e.g., Selenium WebDriver, BDD) and new or emerging tools in the field.
+Programming Skills: Enhance your coding skills in languages commonly used for automation ( Java, Javascript). Consider learning additional languages or technologies relevant to your domain.
 
-        if (statusCode == 200) {
-            System.out.println("Authentication successful.");
-            return encodedAuth;
-        } else {
-            System.out.println("Authentication failed with status code: " + statusCode);
-            return null;
-        }
-    }
+Complex Problem Solving: Develop ability to solve complex problems related to automation and testing. This includes debugging intricate issues and optimizing test scripts for performance.
+Data Analysis: Enhance  skills in analyzing test data to derive insights and make informed decisions about testing strategies and improvements.
 
-    private static void updateTestResult(CloseableHttpClient httpClient, String auth, String testInstanceId, String status) throws Exception {
-        String updateUrl = ALM_URL + "/rest/domains/" + DOMAIN + "/projects/" + PROJECT + "/runs";
-        HttpPost updateRequest = new HttpPost(updateUrl);
-        updateRequest.setHeader("Authorization", "Basic " + auth);
-        updateRequest.setHeader("Content-Type", "application/xml");
+-------------------
 
-        String xmlPayload = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>"
-            + "<Entity Type=\"run\">"
-            + "<Fields>"
-            + "<Field Name=\"name\"><Value>Test Run</Value></Field>"
-            + "<Field Name=\"test-instance-id\"><Value>" + testInstanceId + "</Value></Field>"
-            + "<Field Name=\"status\"><Value>" + status + "</Value></Field>"
-            + "</Fields>"
-            + "</Entity>";
+Clear Career Path: Help in defining a clear career path and goals for advancement within the organization. This includes discussions on what’s needed to move to the next level.
+Regular Feedback: Constructive feedback on your performance and areas for improvement to help you align with your career objectives.
+Mentorship: Support in finding a mentor within or outside the organization who can provide guidance, share insights, and offer career advice.
+Coaching: Regular coaching sessions to help develop leadership skills, project management abilities, and strategic thinking.
 
-        updateRequest.setEntity(new StringEntity(xmlPayload));
+-----------------
 
-        HttpResponse updateResponse = httpClient.execute(updateRequest);
-        int statusCode = updateResponse.getStatusLine().getStatusCode();
-        EntityUtils.consume(updateResponse.getEntity());
+Here’s a breakdown of how we can measure progress across different key development areas:
 
-        if (statusCode == 201) {
-            System.out.println("Test result updated successfully.");
-        } else {
-            System.out.println("Failed to update test result with status code: " + statusCode);
-        }
-    }
+Project Outcomes: Successful implementation and execution of complex automation projects or scripts.
+Skill Proficiency: Demonstrable proficiency in new tools or technologies through successful project deliverables and problem-solving.
+Issue Resolution: Successful resolution of complex problems and bugs identified during testing, with documented improvements in automation efficiency.
+Process Improvements: Implementation of process improvements that lead to measurable gains in productivity or quality.
 
-    private static void logout(CloseableHttpClient httpClient) throws Exception {
-        String logoutUrl = ALM_URL + "/authentication-point/logout";
-        HttpGet logoutRequest = new HttpGet(logoutUrl);
-
-        HttpResponse logoutResponse = httpClient.execute(logoutRequest);
-        int statusCode = logoutResponse.getStatusLine().getStatusCode();
-        EntityUtils.consume(logoutResponse.getEntity());
-
-        if (statusCode == 200) {
-            System.out.println("Logout successful.");
-        } else {
-            System.out.println("Logout failed with status code: " + statusCode);
-        }
-    }
-}
+--------
